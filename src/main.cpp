@@ -22,7 +22,19 @@ int main()
 	sf::RenderWindow generation (sf::VideoMode(screen_x,screen_y),"generation");
 	std::vector<std::vector<sf::RectangleShape>> map;
 
-	for (int y = 0; y < screen_y / square_size; y++)
+	for (int y = 0; y < (screen_y / square_size) / 2; y++)
+	{
+		std::vector<sf::RectangleShape> line;
+		for (int x = 0; x < screen_x / square_size; x++)
+		{
+			sf::RectangleShape square(sf::Vector2f(square_size, square_size));
+			square.setPosition(x * square_size, y * square_size);
+			square.setFillColor(blue);
+			line.push_back(std::move(square));
+		}
+		map.push_back(std::move(line));
+	}
+	for (int y = (screen_y / square_size) / 2; y < screen_y / square_size; y++)
 	{
 		std::vector<sf::RectangleShape> line;
 		for (int x = 0; x < screen_x / square_size; x++)
@@ -36,7 +48,7 @@ int main()
 			line.push_back(std::move(square));
 		}
 		map.push_back(std::move(line));
-		good_random = good_random + 2;
+		good_random = good_random + 5;
 	}
 	for (int y = 0; y < screen_y / square_size; y++)
 	{
