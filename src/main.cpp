@@ -43,10 +43,10 @@ int main()
 		for (int x = 0; x < screen_x / square_size; x++)
 		{
 			size_t chance_brown = 0;
-			sf::Color neighboring_squareL = x > 0 ? map[y][x-1].getFillColor() : pink;
-			sf::Color neighboring_squareR = x < screen_x / square_size - 1 ? map[y][x+1].getFillColor() : pink;
-			sf::Color neighboring_squareU = y > 0 ? map[y-1][x].getFillColor() : pink;
-			sf::Color neighboring_squareD = y < screen_y / square_size - 1 ? map[y+1][x].getFillColor() : pink;
+			sf::Color neighboring_squareL = x > 0 ? map[y][x - 1].getFillColor() : pink;
+			sf::Color neighboring_squareR = x < screen_x / square_size - 1 ? map[y][x + 1].getFillColor() : pink;
+			sf::Color neighboring_squareU = y > 0 ? map[y - 1][x].getFillColor() : pink;
+			sf::Color neighboring_squareD = y < screen_y / square_size - 1 ? map[y + 1][x].getFillColor() : pink;
 
 			if (neighboring_squareL == brown)
 				chance_brown += 25;
@@ -59,6 +59,8 @@ int main()
 			
 			if (chance_brown >= 75 && size_random(random) <= chance_brown)
 				map[y][x].setFillColor(brown);
+			else if (chance_brown == 0)
+				map[y][x].setFillColor(blue);
 		}
 	}
 	for (int y = 0; y < screen_y / square_size; y++)
@@ -66,9 +68,10 @@ int main()
 		for (int x = 0; x < screen_x / square_size; x++)
 		{
 			sf::Color neighboring_squareU = y > 0 ? map[y - 1][x].getFillColor() : pink;
+			sf::Color neighboring_squareD = y < screen_y / square_size - 1 ? map[y + 1][x].getFillColor() : pink;
 			
 			sf::Color square_color = map[y][x].getFillColor();
-			if (neighboring_squareU == blue && square_color == brown) 
+			if (square_color == blue && neighboring_squareD == brown && neighboring_squareU != brown)
 				map[y][x].setFillColor(green);
 		}
 	}
