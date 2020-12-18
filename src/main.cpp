@@ -3,8 +3,8 @@
 #include <iostream>
 int main()
 {
-	int screen_x = 1000;
-	int screen_y = 500;
+	int screen_x = 1300;
+	int screen_y = 700;
 	int min_random = 1;
 	int max_random = 100;
 	unsigned int good_random = 20;
@@ -13,7 +13,9 @@ int main()
 	sf::Color brown (91,56,0);
 	sf::Color blue (0,243,255);
 	sf::Color pink (255,0,255);
-	sf::Color green(70,255,0);
+	sf::Color green (70,255,0);
+	sf::Color grey (109,109,109);
+	sf::Color deep_blue (28,45,255);
 
 	std::random_device random;
 	std::mt19937 random_algo (random());
@@ -48,7 +50,7 @@ int main()
 			line.push_back(std::move(square));
 		}
 		map.push_back(std::move(line));
-		good_random = good_random + 5;
+		good_random = good_random + 5; //default = 5, more it grow, flatter the world is//
 	}
 	for (int y = 0; y < screen_y / square_size; y++)
 	{
@@ -79,6 +81,56 @@ int main()
 	{
 		for (int x = 0; x < screen_x / square_size; x++)
 		{
+			sf::Color square_color = map[y][x].getFillColor();
+			if (square_color == brown)
+			{
+				size_t chance_grey = 3;
+				if (chance_grey >= size_random(random))
+				{
+					map[y][x].setFillColor(grey);
+				}
+			}
+		}
+	}
+	for (int y = 0; y < screen_y / square_size; y++)
+	{
+		for (int x = 0; x < screen_x / square_size; x++)
+		{
+			size_t chance_grey = 0;
+			sf::Color square_color = map[y][x].getFillColor();
+			sf::Color neighboring_squareL = x > 0 ? map[y][x - 1].getFillColor() : pink;
+			sf::Color neighboring_squareR = x < screen_x / square_size - 1 ? map[y][x + 1].getFillColor() : pink;
+			sf::Color neighboring_squareU = y > 0 ? map[y - 1][x].getFillColor() : pink;
+			sf::Color neighboring_squareD = y < screen_y / square_size - 1 ? map[y + 1][x].getFillColor() : pink;
+
+			if (neighboring_squareL == grey && square_color == brown)
+				chance_grey += 25;
+			if (neighboring_squareR == grey && square_color == brown)
+				chance_grey += 25;
+			if (neighboring_squareU == grey && square_color == brown)
+				chance_grey += 25;
+			if (neighboring_squareD == grey && square_color == brown)
+				chance_grey += 25;
+			
+			if (size_random(random) <= chance_grey)
+				map[y][x].setFillColor(grey);
+		}
+	}
+for (int y = 1.3f * (screen_y / square_size) / 2; y < screen_y / square_size; y++)
+    {
+        for (int x = 0; x < screen_x / square_size; x++)
+        {
+            sf::Color square_color = map[y][x].getFillColor();
+            if (square_color == blue)
+            {
+                map[y][x].setFillColor(deep_blue);
+            }
+        }
+    }
+	for (int y = 0; y < screen_y / square_size; y++)
+	{
+		for (int x = 0; x < screen_x / square_size; x++)
+		{
 			sf::Color neighboring_squareU = y > 0 ? map[y - 1][x].getFillColor() : pink;
 			sf::Color neighboring_squareD = y < screen_y / square_size - 1 ? map[y + 1][x].getFillColor() : pink;
 			
@@ -87,7 +139,7 @@ int main()
 				map[y][x].setFillColor(green);
 		}
 	}
-	
+
 	while(generation.isOpen())
 	{
 		sf::Event event;
